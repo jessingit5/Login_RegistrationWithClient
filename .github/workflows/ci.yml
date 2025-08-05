@@ -17,7 +17,8 @@ jobs:
         run: cp .env.example .env
 
       - name: Build and Run Docker Compose
-        run: docker-compose up -d --build
+        
+        run: docker compose up -d --build
 
       - name: Set up Python for Playwright
         uses: actions/setup-python@v4
@@ -41,7 +42,8 @@ jobs:
         run: pytest e2e_tests/
         
       - name: Run Integration and Unit tests
-        run: docker-compose exec app pytest tests/
+        # Also corrected this command
+        run: docker compose exec app pytest tests/
 
       - name: Login to Docker Hub
         if: github.ref == 'refs/heads/main' && success()
@@ -56,4 +58,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/Login_registration:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/login-registration:latest 
