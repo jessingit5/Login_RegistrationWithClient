@@ -2,14 +2,17 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-from . import models, schemas, auth, hashing
-from .database import SessionLocal, engine
 
-models.Base.metadata.create_all(bind=engine)
+from . import models, schemas, auth, hashing
+from .database import SessionLocal, engine, Base 
+
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 def get_db():
     db = SessionLocal()
@@ -17,6 +20,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
 
 @app.get("/", response_class=FileResponse, include_in_schema=False)
 async def read_root():
