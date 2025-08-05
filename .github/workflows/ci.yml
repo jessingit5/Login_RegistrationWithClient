@@ -37,7 +37,8 @@ jobs:
      
       - name: List files in container
         run: docker compose exec app ls -la /app
-
+      - name: Run Integration and Unit tests
+        run: docker compose exec app pytest tests/
 
       - name: Run E2E tests
         run: |
