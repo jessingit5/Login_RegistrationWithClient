@@ -9,6 +9,10 @@ on:
 jobs:
   test-and-publish:
     runs-on: ubuntu-latest
+
+    env:
+      DATABASE_URL: "postgresql://testuser:testpassword@localhost:5432/testdb"
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
