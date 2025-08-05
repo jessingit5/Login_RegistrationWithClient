@@ -17,7 +17,6 @@ jobs:
         run: cp .env.example .env
 
       - name: Build and Run Docker Compose
-        
         run: docker compose up -d --build
 
       - name: Set up Python for Playwright
@@ -34,15 +33,25 @@ jobs:
         run: playwright install --with-deps
 
       - name: Wait for services to be ready
+
         run: |
-          echo "Waiting for services..."
-          sleep 15
-      
+          echo "Waiting for the web server to be ready..."
+          timeout=60
+          while ! curl -s --fail http://localhost:8000/; do
+            sleep 5
+            timeout=$((timeout-5))
+            if [ $timeout -le 0 ]; then
+              echo "Timed out waiting for server."
+              docker compose logs # Print logs for debugging
+              exit 1
+            fi
+          done
+          echo "Server is ready!"
+
       - name: Run Playwright E2E tests
         run: pytest e2e_tests/
         
       - name: Run Integration and Unit tests
-        # Also corrected this command
         run: docker compose exec app pytest tests/
 
       - name: Login to Docker Hub
