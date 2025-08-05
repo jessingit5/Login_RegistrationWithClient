@@ -14,6 +14,8 @@ COPY --from=builder /app/wheels /wheels
 RUN pip install --no-cache /wheels/*
 COPY ./app ./app
 COPY ./static ./static
-RUN chown -R app:app /app /static
+
+RUN chown -R app:app /app
+
 USER app
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
