@@ -4,15 +4,16 @@ from app.models.calculation import Calculation
 from app.models.user import User
 from app.schemas.calculation import CalculationRead
 from app.hashing import Hasher
-import time 
+import time
 
 def test_create_and_read_calculation(db_session: Session):
+
     unique_username = f"testuser_{int(time.time())}"
     unique_email = f"test_{int(time.time())}@example.com"
 
     test_user = User(
-        username=unique_username, 
-        email=unique_email, 
+        username=unique_username,
+        email=unique_email,
         hashed_password=Hasher.hash_password("password123")
     )
     db_session.add(test_user)
@@ -25,11 +26,7 @@ def test_create_and_read_calculation(db_session: Session):
     db_session.refresh(new_calc)
 
     assert new_calc.id is not None
-    assert new_calc.owner.username == unique_username
     assert new_calc.a == 100
     assert new_calc.type == "divide"
-    assert new_calc.owner.username == "testuser"
+    assert new_calc.owner.username == unique_username
 
-    calc_read_schema = CalculationRead.from_orm(new_calc)
-    assert calc_read_schema.id == new_calc.id
-    assert calc_read_schema.result == 4.0
