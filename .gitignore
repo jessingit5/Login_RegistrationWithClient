@@ -1,0 +1,8 @@
+# virtualenv
+venv/
+.venv/
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov
